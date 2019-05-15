@@ -74,27 +74,27 @@ int main(void)
 	//send Hello world
 	while (*hello != '\0')
 		usart1_send_char(*hello++);
+
     blink(LED_GREEN);
 
 }
 void usart1_handler(void)
 {
     if (READ_BIT(USART1_BASE+USART_SR_OFFSET,ORE_BIT)==1){
+        char DR_Handle=(char)REG(USART1_BASE+USART_DR_OFFSET);
+	    char *hello = "Overrun error!\r\n";
 
-	char *hello = "Overrun error!\r\n";
-
-	//send Hello world
-	while (*hello != '\0')
-		usart1_send_char(*hello++);
-    }
+	    //send Hello world
+	    while (*hello != '\0')
+		    usart1_send_char(*hello++);
+        }
     else{
-    char ch;
-    ch = usart1_receive_char();
+        char ch,DR_Handle;
+        ch = usart1_receive_char();
 
 		if (ch == '\r')
 			usart1_send_char('\n');
-
-	usart1_send_char(ch);
-    }
+	        usart1_send_char(ch);
+        }
 }
 
